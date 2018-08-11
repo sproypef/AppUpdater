@@ -38,6 +38,8 @@ public class AppUpdater implements IAppUpdater {
     private UtilsAsync.LatestAppVersion latestAppVersion;
     private DialogInterface.OnClickListener btnUpdateClickListener, btnDismissClickListener, btnDisableClickListener;
     private Map<String, String> propertiesConnection;
+    private Update installedUpdate;
+    private Update update;
 
     private AlertDialog alertDialog;
     private Snackbar snackbar;
@@ -345,6 +347,10 @@ public class AppUpdater implements IAppUpdater {
                 }
 
                 Update installedUpdate = new Update(UtilsLibrary.getAppInstalledVersion(context), UtilsLibrary.getAppInstalledVersionCode(context));
+
+                AppUpdater.this.update = update;
+                AppUpdater.this.installedUpdate = installedUpdate;
+
                 if (UtilsLibrary.isUpdateAvailable(installedUpdate, update)) {
                     Integer successfulChecks = libraryPreferences.getSuccessfulChecks();
                     if (UtilsLibrary.isAbleToShow(successfulChecks, showEvery)) {
@@ -452,4 +458,11 @@ public class AppUpdater implements IAppUpdater {
         }
     }
 
+    public Update getInstalledUpdate() {
+        return this.installedUpdate;
+    }
+
+    public Update getUpdate() {
+        return this.update;
+    }
 }
