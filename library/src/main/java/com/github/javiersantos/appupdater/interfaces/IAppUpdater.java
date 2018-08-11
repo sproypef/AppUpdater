@@ -3,6 +3,7 @@ package com.github.javiersantos.appupdater.interfaces;
 import android.content.DialogInterface;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.github.javiersantos.appupdater.AppUpdater;
@@ -13,6 +14,8 @@ import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.Duration;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.Update;
+
+import java.util.Map;
 
 public interface IAppUpdater {
     /**
@@ -68,6 +71,15 @@ public interface IAppUpdater {
      */
 
     AppUpdater setUpdateJSON(@NonNull String jsonUrl);
+
+    /**
+     * Set the map with the properties connection
+     *
+     * @param propertiesConnection properties map
+     * @return this
+     */
+
+    AppUpdater setPropertiesConnection(@Nullable Map<String, String> propertiesConnection);
 
     /**
      * Set the times the app ascertains that a new update is available and display a dialog, Snackbar or notification. It makes the updates less invasive. Default: 1.
@@ -269,7 +281,7 @@ public interface IAppUpdater {
      *
      * @param textResource resource from the strings xml file for the dismiss button
      * @return this
-     * @deprecated  use {@link #setButtonDismiss(int)} instead
+     * @deprecated use {@link #setButtonDismiss(int)} instead
      */
     AppUpdater setDialogButtonDismiss(@StringRes int textResource);
 
@@ -360,8 +372,9 @@ public interface IAppUpdater {
     /**
      * Make update dialog non-cancelable, and
      * force user to make update
-     *  @param isCancelable true to force user to make update, false otherwise
-     *  @return this
+     *
+     * @param isCancelable true to force user to make update, false otherwise
+     * @return this
      */
     AppUpdater setCancelable(Boolean isCancelable);
 

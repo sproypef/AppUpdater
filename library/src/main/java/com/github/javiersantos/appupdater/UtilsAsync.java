@@ -9,6 +9,7 @@ import com.github.javiersantos.appupdater.objects.GitHub;
 import com.github.javiersantos.appupdater.objects.Update;
 
 import java.lang.ref.WeakReference;
+import java.util.Map;
 
 class UtilsAsync {
 
@@ -19,6 +20,7 @@ class UtilsAsync {
         private UpdateFrom updateFrom;
         private GitHub gitHub;
         private String xmlOrJsonUrl;
+        private Map<String, String> propertiesConnection;
         private AppUpdater.LibraryListener listener;
 
         public LatestAppVersion(Context context, Boolean fromUtils, UpdateFrom updateFrom, GitHub gitHub, String xmlOrJsonUrl, AppUpdater.LibraryListener listener) {
@@ -28,6 +30,17 @@ class UtilsAsync {
             this.updateFrom = updateFrom;
             this.gitHub = gitHub;
             this.xmlOrJsonUrl = xmlOrJsonUrl;
+            this.listener = listener;
+        }
+
+        public LatestAppVersion(Context context, Boolean fromUtils, UpdateFrom updateFrom, GitHub gitHub, String xmlOrJsonUrl, Map<String, String> propertiesConnetion, AppUpdater.LibraryListener listener) {
+            this.contextRef = new WeakReference<>(context);
+            this.libraryPreferences = new LibraryPreferences(context);
+            this.fromUtils = fromUtils;
+            this.updateFrom = updateFrom;
+            this.gitHub = gitHub;
+            this.xmlOrJsonUrl = xmlOrJsonUrl;
+            this.propertiesConnection = propertiesConnetion;
             this.listener = listener;
         }
 
@@ -65,12 +78,12 @@ class UtilsAsync {
         protected Update doInBackground(Void... voids) {
             try {
                 if (updateFrom == UpdateFrom.XML || updateFrom == UpdateFrom.JSON) {
-                    Update update = UtilsLibrary.getLatestAppVersion(updateFrom, xmlOrJsonUrl);
+                    Update update = UtilsLibrary.getLatestAppVersion(updateFrom, xmlOrJsonUrl, propertiesConnection);
                     if (update != null) {
                         return update;
                     } else {
                         AppUpdaterError error = updateFrom == UpdateFrom.XML ? AppUpdaterError.XML_ERROR
-                                                                             : AppUpdaterError.JSON_ERROR;
+                                : AppUpdaterError.JSON_ERROR;
 
                         if (listener != null) {
                             listener.onFailed(error);

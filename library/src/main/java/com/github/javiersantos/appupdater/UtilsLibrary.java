@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
+import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -70,13 +71,11 @@ class UtilsLibrary {
             return latestVersion.getLatestVersionCode() > installedVersion.getLatestVersionCode();
         } else {
             if (!TextUtils.equals(installedVersion.getLatestVersion(), "0.0.0.0") && !TextUtils.equals(latestVersion.getLatestVersion(), "0.0.0.0")) {
-                try
-                {
+                try {
                     final Version installed = new Version(installedVersion.getLatestVersion());
                     final Version latest = new Version(latestVersion.getLatestVersion());
                     return installed.compareTo(latest) < 0;
-                } catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                     return false;
                 }
@@ -93,7 +92,8 @@ class UtilsLibrary {
         try {
             new URL(s);
             res = true;
-        } catch (MalformedURLException ignored) {}
+        } catch (MalformedURLException ignored) {
+        }
 
         return res;
     }
@@ -249,8 +249,7 @@ class UtilsLibrary {
                     if (splitGitHub.length > 1) {
                         splitGitHub = splitGitHub[1].split("(\")");
                         version = splitGitHub[0].trim();
-                        if (version.startsWith("v"))
-                        { // Some repo uses vX.X.X
+                        if (version.startsWith("v")) { // Some repo uses vX.X.X
                             splitGitHub = version.split("(v)", 2);
                             version = splitGitHub[1].trim();
                         }
@@ -272,11 +271,20 @@ class UtilsLibrary {
     }
 
     static Update getLatestAppVersion(UpdateFrom updateFrom, String url) {
-        if (updateFrom == UpdateFrom.XML){
+        if (updateFrom == UpdateFrom.XML) {
             ParserXML parser = new ParserXML(url);
             return parser.parse();
         } else {
             return new ParserJSON(url).parse();
+        }
+    }
+
+    static Update getLatestAppVersion(UpdateFrom updateFrom, String url, Map<String, String> propertiesConnection) {
+        if (updateFrom == UpdateFrom.XML) {
+            ParserXML parser = new ParserXML(url);
+            return parser.parse();
+        } else {
+            return new ParserJSON(url, propertiesConnection).parse();
         }
     }
 
