@@ -362,6 +362,14 @@ public interface IAppUpdater {
     AppUpdater setButtonDoNotShowAgainClickListener(DialogInterface.OnClickListener clickListener);
 
     /**
+     * Set listener for execute when not update aviable.
+     *
+     * @param listener
+     * @return
+     */
+    AppUpdater setUnaviableUpdateListener(UnaviableUpdateListener listener);
+
+    /**
      * Sets the resource identifier for the small notification icon
      *
      * @param iconRes The id of the drawable item
@@ -405,5 +413,9 @@ public interface IAppUpdater {
         void onSuccess(Update update);
 
         void onFailed(AppUpdaterError error);
+    }
+
+    interface UnaviableUpdateListener {
+        void doAction(Update installedUpdate);
     }
 }

@@ -41,6 +41,7 @@ public class AppUpdater implements IAppUpdater {
     private Update installedUpdate;
     private Update update;
     private boolean isUpdateAvailable;
+    private UnaviableUpdateListener unaviableUpdateListener;
 
     private AlertDialog alertDialog;
     private Snackbar snackbar;
@@ -322,6 +323,12 @@ public class AppUpdater implements IAppUpdater {
     }
 
     @Override
+    public AppUpdater setUnaviableUpdateListener(UnaviableUpdateListener listener) {
+        this.unaviableUpdateListener = listener;
+        return this;
+    }
+
+    @Override
     public AppUpdater setIcon(@DrawableRes int iconRes) {
         this.iconResId = iconRes;
         return this;
@@ -376,20 +383,23 @@ public class AppUpdater implements IAppUpdater {
                         }
                     }
                     libraryPreferences.setSuccessfulChecks(successfulChecks + 1);
-                } else if (showAppUpdated) {
-                    switch (display) {
-                        case DIALOG:
-                            alertDialog = UtilsDisplay.showUpdateNotAvailableDialog(context, titleNoUpdate, getDescriptionNoUpdate(context));
-                            alertDialog.setCancelable(isDialogCancelable);
-                            alertDialog.show();
-                            break;
-                        case SNACKBAR:
-                            snackbar = UtilsDisplay.showUpdateNotAvailableSnackbar(context, getDescriptionNoUpdate(context), UtilsLibrary.getDurationEnumToBoolean(duration));
-                            snackbar.show();
-                            break;
-                        case NOTIFICATION:
-                            UtilsDisplay.showUpdateNotAvailableNotification(context, titleNoUpdate, getDescriptionNoUpdate(context), iconResId);
-                            break;
+                } else {
+                    AppUpdater.this.unaviableUpdateListener.doAction(installedUpdate);
+                    if (showAppUpdated) {
+                        switch (display) {
+                            case DIALOG:
+                                alertDialog = UtilsDisplay.showUpdateNotAvailableDialog(context, titleNoUpdate, getDescriptionNoUpdate(context));
+                                alertDialog.setCancelable(isDialogCancelable);
+                                alertDialog.show();
+                                break;
+                            case SNACKBAR:
+                                snackbar = UtilsDisplay.showUpdateNotAvailableSnackbar(context, getDescriptionNoUpdate(context), UtilsLibrary.getDurationEnumToBoolean(duration));
+                                snackbar.show();
+                                break;
+                            case NOTIFICATION:
+                                UtilsDisplay.showUpdateNotAvailableNotification(context, titleNoUpdate, getDescriptionNoUpdate(context), iconResId);
+                                break;
+                        }
                     }
                 }
             }
