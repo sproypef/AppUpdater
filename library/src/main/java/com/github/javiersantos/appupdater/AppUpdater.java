@@ -40,6 +40,7 @@ public class AppUpdater implements IAppUpdater {
     private Map<String, String> propertiesConnection;
     private Update installedUpdate;
     private Update update;
+    private boolean isUpdateAvailable;
 
     private AlertDialog alertDialog;
     private Snackbar snackbar;
@@ -54,6 +55,7 @@ public class AppUpdater implements IAppUpdater {
         this.showEvery = 1;
         this.showAppUpdated = false;
         this.iconResId = R.drawable.ic_stat_name;
+        this.isUpdateAvailable = false;
 
         // Dialog
         this.titleUpdate = context.getResources().getString(R.string.appupdater_update_available);
@@ -352,6 +354,7 @@ public class AppUpdater implements IAppUpdater {
                 AppUpdater.this.installedUpdate = installedUpdate;
 
                 if (UtilsLibrary.isUpdateAvailable(installedUpdate, update)) {
+                    AppUpdater.this.isUpdateAvailable = true;
                     Integer successfulChecks = libraryPreferences.getSuccessfulChecks();
                     if (UtilsLibrary.isAbleToShow(successfulChecks, showEvery)) {
                         switch (display) {
@@ -464,5 +467,9 @@ public class AppUpdater implements IAppUpdater {
 
     public Update getUpdate() {
         return this.update;
+    }
+
+    public boolean isUpdateAvailable() {
+        return this.isUpdateAvailable;
     }
 }
