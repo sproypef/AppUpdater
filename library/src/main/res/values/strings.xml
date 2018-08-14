@@ -11,5 +11,6 @@
     <string name="appupdater_btn_dismiss">Dismiss</string>
     <string name="appupdater_channel_name">Update notifications</string>
 
-    <string name="appupdater_channel" translatable="false">appupdater_channel_01</string>
+    <string name="appupdater_channel">appupdater_channel_01</string>
+    <string name="appupdater_failed_network">Network not avialable!</string>
 </resources>

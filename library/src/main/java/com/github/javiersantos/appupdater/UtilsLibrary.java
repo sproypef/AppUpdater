@@ -1,5 +1,7 @@
 package com.github.javiersantos.appupdater;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -16,6 +20,7 @@ import com.github.javiersantos.appupdater.objects.GitHub;
 import com.github.javiersantos.appupdater.objects.Update;
 import com.github.javiersantos.appupdater.objects.Version;
 
+import org.json.JSONException;
 import org.jsoup.Jsoup;
 
 import java.io.BufferedReader;
@@ -270,7 +275,7 @@ class UtilsLibrary {
         return version;
     }
 
-    static Update getLatestAppVersion(UpdateFrom updateFrom, String url) {
+    static Update getLatestAppVersion(UpdateFrom updateFrom, String url) throws IOException, JSONException {
         if (updateFrom == UpdateFrom.XML) {
             ParserXML parser = new ParserXML(url);
             return parser.parse();
@@ -279,7 +284,7 @@ class UtilsLibrary {
         }
     }
 
-    static Update getLatestAppVersion(UpdateFrom updateFrom, String url, Map<String, String> propertiesConnection) {
+    static Update getLatestAppVersion(UpdateFrom updateFrom, String url, Map<String, String> propertiesConnection) throws IOException, JSONException {
         if (updateFrom == UpdateFrom.XML) {
             ParserXML parser = new ParserXML(url);
             return parser.parse();
@@ -301,6 +306,7 @@ class UtilsLibrary {
         return intent;
     }
 
+    @Deprecated
     static void goToUpdate(Context context, UpdateFrom updateFrom, URL url) {
         Intent intent = intentToUpdate(context, updateFrom, url);
 
@@ -313,6 +319,52 @@ class UtilsLibrary {
             }
         } else {
             context.startActivity(intent);
+        }
+    }
+
+    static void goToUpdate(Context context, UpdateFrom updateFrom, URL url, boolean direct) {
+        if (!direct) {
+            Intent intent = intentToUpdate(context, updateFrom, url);
+
+            if (updateFrom.equals(UpdateFrom.GOOGLE_PLAY)) {
+                try {
+                    context.startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url.toString()));
+                    context.startActivity(intent);
+                }
+            } else {
+                context.startActivity(intent);
+            }
+        } else {
+
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 777);
+                }
+                return;
+            } else if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 778);
+                }
+                return;
+            }
+
+            /*DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+            Uri Download_Uri = Uri.parse(url.toString());
+
+            DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
+            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+            request.setAllowedOverRoaming(false);
+            request.setTitle("Descargando actualización");
+            request.setDescription("Espere...");
+            request.setVisibleInDownloadsUi(true);
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/" + "update" + ".apk");
+
+            if (downloadManager != null) {
+                AppUpdater.listIdDownloads.add(downloadManager.enqueue(request));
+            }*/
+            new DownloadUpdate().downloadFile((Activity) context, url.toString(), "update.apk");
         }
     }
 

@@ -16,15 +16,24 @@ public class UpdateClickListener implements DialogInterface.OnClickListener {
     private final Context context;
     private final UpdateFrom updateFrom;
     private final URL apk;
+    private final boolean isDirectDownload;
 
     public UpdateClickListener(final Context context, final UpdateFrom updateFrom, final URL apk) {
         this.context = context;
         this.updateFrom = updateFrom;
         this.apk = apk;
+        this.isDirectDownload = false;
+    }
+
+    public UpdateClickListener(final Context context, final UpdateFrom updateFrom, final URL apk, boolean isDirectDownload) {
+        this.context = context;
+        this.updateFrom = updateFrom;
+        this.apk = apk;
+        this.isDirectDownload = isDirectDownload;
     }
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
-        UtilsLibrary.goToUpdate(context, updateFrom, apk);
+        UtilsLibrary.goToUpdate(context, updateFrom, apk, isDirectDownload);
     }
 }

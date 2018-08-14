@@ -8,6 +8,9 @@ import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.GitHub;
 import com.github.javiersantos.appupdater.objects.Update;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 
@@ -82,8 +85,7 @@ class UtilsAsync {
                     if (update != null) {
                         return update;
                     } else {
-                        AppUpdaterError error = updateFrom == UpdateFrom.XML ? AppUpdaterError.XML_ERROR
-                                : AppUpdaterError.JSON_ERROR;
+                        AppUpdaterError error = updateFrom == UpdateFrom.XML ? AppUpdaterError.XML_ERROR : AppUpdaterError.JSON_ERROR;
 
                         if (listener != null) {
                             listener.onFailed(error);
@@ -100,7 +102,13 @@ class UtilsAsync {
                         return null;
                     }
                 }
-            } catch (Exception ex) {
+            } catch (IOException ex) {
+                if (listener != null) listener.onFailed(AppUpdaterError.NETWORK_NOT_AVAILABLE);
+                cancel(true);
+                return null;
+            } catch (JSONException e) {
+                AppUpdaterError error = updateFrom == UpdateFrom.XML ? AppUpdaterError.XML_ERROR : AppUpdaterError.JSON_ERROR;
+                if (listener != null) listener.onFailed(error);
                 cancel(true);
                 return null;
             }

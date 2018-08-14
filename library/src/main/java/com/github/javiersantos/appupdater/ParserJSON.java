@@ -1,7 +1,5 @@
 package com.github.javiersantos.appupdater;
 
-import android.util.Log;
-
 import com.github.javiersantos.appupdater.objects.Update;
 
 import org.json.JSONArray;
@@ -14,7 +12,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -29,58 +26,41 @@ class ParserJSON {
     private static final String KEY_RELEASE_NOTES = "releaseNotes";
     private static final String KEY_URL = "url";
 
-    public ParserJSON(String url) {
-        try {
-            this.jsonUrl = new URL(url);
-            this.jsonConnection = (HttpURLConnection) jsonUrl.openConnection();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    public ParserJSON(String url) throws IOException {
+        this.jsonUrl = new URL(url);
+        this.jsonConnection = (HttpURLConnection) jsonUrl.openConnection();
     }
 
-    public ParserJSON(String url, Map<String, String> propertiesConnection) {
-        try {
-            this.jsonUrl = new URL(url);
-            this.jsonConnection = (HttpURLConnection) jsonUrl.openConnection();
-            this.propertiesConnection = propertiesConnection;
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    public ParserJSON(String url, Map<String, String> propertiesConnection) throws IOException {
+        this.jsonUrl = new URL(url);
+        this.jsonConnection = (HttpURLConnection) jsonUrl.openConnection();
+        this.propertiesConnection = propertiesConnection;
     }
 
-    public Update parse() {
+    public Update parse() throws JSONException, IOException {
 
-        try {
-            JSONObject json = readJsonFromUrl();
-            Update update = new Update();
-            update.setLatestVersion(json.getString(KEY_LATEST_VERSION).trim());
-            update.setLatestVersionCode(json.optInt(KEY_LATEST_VERSION_CODE));
-            JSONArray releaseArr = json.optJSONArray(KEY_RELEASE_NOTES);
-            if (releaseArr != null) {
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < releaseArr.length(); ++i) {
-                    builder.append(releaseArr.getString(i).trim());
-                    if (i != releaseArr.length() - 1)
-                        builder.append(System.getProperty("line.separator"));
-                }
-                update.setReleaseNotes(builder.toString());
+        JSONObject json = readJsonFromUrl();
+        Update update = new Update();
+        update.setLatestVersion(json.getString(KEY_LATEST_VERSION).trim());
+        update.setLatestVersionCode(json.optInt(KEY_LATEST_VERSION_CODE));
+        JSONArray releaseArr = json.optJSONArray(KEY_RELEASE_NOTES);
+        if (releaseArr != null) {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < releaseArr.length(); ++i) {
+                builder.append(releaseArr.getString(i).trim());
+                if (i != releaseArr.length() - 1)
+                    builder.append(System.getProperty("line.separator"));
             }
-            URL url = new URL(json.getString(KEY_URL).trim());
-            update.setUrlToDownload(url);
-            return update;
-        } catch (IOException e) {
+            update.setReleaseNotes(builder.toString());
+        }
+        URL url = new URL(json.getString(KEY_URL).trim());
+        update.setUrlToDownload(url);
+        return update;
+        /*} catch (IOException e) {
             Log.e("AppUpdater", "The server is down or there isn't an active Internet connection.", e);
         } catch (JSONException e) {
             Log.e("AppUpdater", "The JSON updater file is mal-formatted. AppUpdate can't check for updates.");
-        }
-
-        return null;
+        }*/
     }
 
 
@@ -94,11 +74,14 @@ class ParserJSON {
     }
 
     private JSONObject readJsonFromUrl() throws IOException, JSONException {
-        for (String key : propertiesConnection.keySet()) {
-            if (key.equals("Method")) {
-                jsonConnection.setRequestMethod(propertiesConnection.get(key));
-            } else {
-                jsonConnection.setRequestProperty(key, propertiesConnection.get(key));
+        jsonConnection.setRequestMethod("GET");
+        if (propertiesConnection != null) {
+            for (String key : propertiesConnection.keySet()) {
+                if (key.equals("Method")) {
+                    jsonConnection.setRequestMethod(propertiesConnection.get(key));
+                } else {
+                    jsonConnection.setRequestProperty(key, propertiesConnection.get(key));
+                }
             }
         }
         jsonConnection.setDoOutput(true);

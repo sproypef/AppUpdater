@@ -20,6 +20,7 @@ import com.github.javiersantos.appupdater.interfaces.IAppUpdater;
 import com.github.javiersantos.appupdater.objects.GitHub;
 import com.github.javiersantos.appupdater.objects.Update;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class AppUpdater implements IAppUpdater {
@@ -46,6 +47,7 @@ public class AppUpdater implements IAppUpdater {
     private AlertDialog alertDialog;
     private Snackbar snackbar;
     private Boolean isDialogCancelable;
+    public static final ArrayList<Long> listIdDownloads = new ArrayList<>();
 
     public AppUpdater(Context context) {
         this.context = context;
@@ -366,7 +368,7 @@ public class AppUpdater implements IAppUpdater {
                     if (UtilsLibrary.isAbleToShow(successfulChecks, showEvery)) {
                         switch (display) {
                             case DIALOG:
-                                final DialogInterface.OnClickListener updateClickListener = btnUpdateClickListener == null ? new UpdateClickListener(context, updateFrom, update.getUrlToDownload()) : btnUpdateClickListener;
+                                final DialogInterface.OnClickListener updateClickListener = btnUpdateClickListener == null ? new UpdateClickListener(context, updateFrom, update.getUrlToDownload(), true) : btnUpdateClickListener;
                                 final DialogInterface.OnClickListener disableClickListener = btnDisableClickListener == null ? new DisableClickListener(context) : btnDisableClickListener;
 
                                 alertDialog = UtilsDisplay.showUpdateAvailableDialog(context, titleUpdate, getDescriptionUpdate(context, update, Display.DIALOG), btnDismiss, btnUpdate, btnDisable, updateClickListener, btnDismissClickListener, disableClickListener);
@@ -414,6 +416,14 @@ public class AppUpdater implements IAppUpdater {
                     throw new IllegalArgumentException("XML file is not valid!");
                 } else if (error == AppUpdaterError.JSON_URL_MALFORMED) {
                     throw new IllegalArgumentException("JSON file is not valid!");
+                } else if (error == AppUpdaterError.NETWORK_NOT_AVAILABLE) {
+                    switch (display) {
+                        case DIALOG: {
+                            alertDialog = UtilsDisplay.showUpdateNotAvailableDialog(context, "", getString(context, R.string.appupdater_failed_network));
+                            alertDialog.setCancelable(false);
+                            alertDialog.show();
+                        }
+                    }
                 }
             }
         });
@@ -461,6 +471,10 @@ public class AppUpdater implements IAppUpdater {
         }
 
         return descriptionUpdate;
+    }
+
+    private String getString(Context context, int resorceId) {
+        return String.format(context.getResources().getString(resorceId), UtilsLibrary.getAppName(context));
     }
 
     private String getDescriptionNoUpdate(Context context) {
