@@ -349,22 +349,7 @@ class UtilsLibrary {
                 }
                 return;
             }
-
-            /*DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-            Uri Download_Uri = Uri.parse(url.toString());
-
-            DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-            request.setAllowedOverRoaming(false);
-            request.setTitle("Descargando actualización");
-            request.setDescription("Espere...");
-            request.setVisibleInDownloadsUi(true);
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/" + "update" + ".apk");
-
-            if (downloadManager != null) {
-                AppUpdater.listIdDownloads.add(downloadManager.enqueue(request));
-            }*/
-            new DownloadUpdate().downloadFile((Activity) context, url.toString(), "update.apk");
+            new DownloadUpdate().downloadFile((Activity) context, url.toString(), AppUpdaterUtils.getFileNameFromUrl(url, "apk"));
         }
     }
 

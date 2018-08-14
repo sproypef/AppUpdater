@@ -18,6 +18,7 @@ public class UpdateClickListener implements DialogInterface.OnClickListener {
     private final URL apk;
     private final boolean isDirectDownload;
 
+    @Deprecated
     public UpdateClickListener(final Context context, final UpdateFrom updateFrom, final URL apk) {
         this.context = context;
         this.updateFrom = updateFrom;

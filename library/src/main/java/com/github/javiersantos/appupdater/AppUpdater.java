@@ -20,7 +20,6 @@ import com.github.javiersantos.appupdater.interfaces.IAppUpdater;
 import com.github.javiersantos.appupdater.objects.GitHub;
 import com.github.javiersantos.appupdater.objects.Update;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 public class AppUpdater implements IAppUpdater {
@@ -41,13 +40,12 @@ public class AppUpdater implements IAppUpdater {
     private Map<String, String> propertiesConnection;
     private Update installedUpdate;
     private Update update;
-    private boolean isUpdateAvailable;
     private UnaviableUpdateListener unaviableUpdateListener;
 
     private AlertDialog alertDialog;
     private Snackbar snackbar;
     private Boolean isDialogCancelable;
-    public static final ArrayList<Long> listIdDownloads = new ArrayList<>();
+    private Boolean isDirectDownload;
 
     public AppUpdater(Context context) {
         this.context = context;
@@ -58,7 +56,6 @@ public class AppUpdater implements IAppUpdater {
         this.showEvery = 1;
         this.showAppUpdated = false;
         this.iconResId = R.drawable.ic_stat_name;
-        this.isUpdateAvailable = false;
 
         // Dialog
         this.titleUpdate = context.getResources().getString(R.string.appupdater_update_available);
@@ -67,6 +64,7 @@ public class AppUpdater implements IAppUpdater {
         this.btnDismiss = context.getResources().getString(R.string.appupdater_btn_dismiss);
         this.btnDisable = context.getResources().getString(R.string.appupdater_btn_disable);
         this.isDialogCancelable = true;
+        this.isDirectDownload = false;
     }
 
     @Override
@@ -343,6 +341,12 @@ public class AppUpdater implements IAppUpdater {
     }
 
     @Override
+    public AppUpdater setDirectDownload(Boolean isDirecDownload) {
+        this.isDirectDownload = isDirecDownload;
+        return this;
+    }
+
+    @Override
     public AppUpdater init() {
         start();
         return this;
@@ -363,12 +367,11 @@ public class AppUpdater implements IAppUpdater {
                 AppUpdater.this.installedUpdate = installedUpdate;
 
                 if (UtilsLibrary.isUpdateAvailable(installedUpdate, update)) {
-                    AppUpdater.this.isUpdateAvailable = true;
                     Integer successfulChecks = libraryPreferences.getSuccessfulChecks();
                     if (UtilsLibrary.isAbleToShow(successfulChecks, showEvery)) {
                         switch (display) {
                             case DIALOG:
-                                final DialogInterface.OnClickListener updateClickListener = btnUpdateClickListener == null ? new UpdateClickListener(context, updateFrom, update.getUrlToDownload(), true) : btnUpdateClickListener;
+                                final DialogInterface.OnClickListener updateClickListener = btnUpdateClickListener == null ? new UpdateClickListener(context, updateFrom, update.getUrlToDownload(), isDirectDownload) : btnUpdateClickListener;
                                 final DialogInterface.OnClickListener disableClickListener = btnDisableClickListener == null ? new DisableClickListener(context) : btnDisableClickListener;
 
                                 alertDialog = UtilsDisplay.showUpdateAvailableDialog(context, titleUpdate, getDescriptionUpdate(context, update, Display.DIALOG), btnDismiss, btnUpdate, btnDisable, updateClickListener, btnDismissClickListener, disableClickListener);
@@ -491,9 +494,5 @@ public class AppUpdater implements IAppUpdater {
 
     public Update getUpdate() {
         return this.update;
-    }
-
-    public boolean isUpdateAvailable() {
-        return this.isUpdateAvailable;
     }
 }

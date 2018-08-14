@@ -387,6 +387,14 @@ public interface IAppUpdater {
     AppUpdater setCancelable(Boolean isCancelable);
 
     /**
+     * Make update downlaod direct (On notification bar)
+     *
+     * @param isDirecDownload true to force user to make update, false otherwise
+     * @return this
+     */
+    AppUpdater setDirectDownload(Boolean isDirecDownload);
+
+    /**
      * Execute AppUpdater in background.
      *
      * @return this

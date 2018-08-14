@@ -2,11 +2,14 @@ package com.github.javiersantos.appupdater;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.github.javiersantos.appupdater.enums.AppUpdaterError;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.GitHub;
 import com.github.javiersantos.appupdater.objects.Update;
+
+import java.net.URL;
 
 public class AppUpdaterUtils {
     private Context context;
@@ -23,8 +26,8 @@ public class AppUpdaterUtils {
          * onFailed method called if it can't retrieve the latest version
          *
          * @param update            object with the latest update information: version and url to download
-         * @see com.github.javiersantos.appupdater.objects.Update
          * @param isUpdateAvailable compare installed version with the latest one
+         * @see com.github.javiersantos.appupdater.objects.Update
          */
         void onSuccess(Update update, Boolean isUpdateAvailable);
 
@@ -162,6 +165,18 @@ public class AppUpdaterUtils {
     public void stop() {
         if (latestAppVersion != null && !latestAppVersion.isCancelled()) {
             latestAppVersion.cancel(true);
+        }
+    }
+
+    public static String getFileNameFromUrl(URL url, @Nullable String extension) {
+        try {
+            String urlString = url.getFile();
+            return urlString.substring(urlString.lastIndexOf('/') + 1).split("\\?")[0].split("#")[0];
+        } catch (Exception e) {
+            if (extension != null)
+                return "AppUpdater." + extension;
+            else
+                return "AppUpdater";
         }
     }
 }
