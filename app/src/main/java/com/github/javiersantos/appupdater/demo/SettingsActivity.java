@@ -26,7 +26,7 @@ public class SettingsActivity extends PreferenceActivity {
         prefCheckForUpdates.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                new AppUpdater(SettingsActivity.this)
+                AppUpdater.getInstance(SettingsActivity.this)
                         //.setUpdateFrom(UpdateFrom.GITHUB)
                         //.setGitHubUserAndRepo("javiersantos", "AppUpdater")
                         .setUpdateFrom(UpdateFrom.XML)

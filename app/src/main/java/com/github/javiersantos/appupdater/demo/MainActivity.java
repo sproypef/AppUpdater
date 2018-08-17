@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         this.mContext = this;
         setSupportActionBar(binding.toolbar);
-		
+
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -36,11 +38,12 @@ public class MainActivity extends AppCompatActivity {
         binding.included.dialogUpdateChangelog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AppUpdater(mContext)
+                AppUpdater.getInstance(mContext)
                         //.setUpdateFrom(UpdateFrom.GITHUB)
                         //.setGitHubUserAndRepo("javiersantos", "AppUpdater")
+                        .setDirectDownload(true)
                         .setUpdateFrom(UpdateFrom.JSON)
-                        .setUpdateJSON("https://raw.githubusercontent.com/javiersantos/AppUpdater/master/app/update-changelog.json")
+                        .setUpdateJSON("https://sproypef.com/_emulador/servicioVersion.php")
                         .setDisplay(Display.DIALOG)
                         .showAppUpdated(true)
                         .start();
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         binding.included.dialogUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AppUpdater(mContext)
+                AppUpdater.getInstance(mContext)
                         //.setUpdateFrom(UpdateFrom.GITHUB)
                         //.setGitHubUserAndRepo("javiersantos", "AppUpdater")
                         .setUpdateFrom(UpdateFrom.JSON)
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         binding.included.snackbarUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AppUpdater(mContext)
+                AppUpdater.getInstance(mContext)
                         //.setUpdateFrom(UpdateFrom.GITHUB)
                         //.setGitHubUserAndRepo("javiersantos", "AppUpdater")
                         .setUpdateFrom(UpdateFrom.XML)
@@ -78,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         binding.included.notificationUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AppUpdater(mContext)
+                AppUpdater.getInstance(mContext)
                         //.setUpdateFrom(UpdateFrom.GITHUB)
                         //.setGitHubUserAndRepo("javiersantos", "AppUpdater")
                         .setUpdateFrom(UpdateFrom.XML)
@@ -92,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         binding.included.dialogNoUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AppUpdater(mContext)
+                AppUpdater.getInstance(mContext)
                         .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
                         .setDisplay(Display.DIALOG)
                         .showAppUpdated(true)
@@ -103,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         binding.included.snackbarNoUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AppUpdater(mContext)
+                AppUpdater.getInstance(mContext)
                         .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
                         .setDisplay(Display.SNACKBAR)
                         .showAppUpdated(true)
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         binding.included.notificationNoUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AppUpdater(mContext)
+                AppUpdater.getInstance(mContext)
                         .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
                         .setDisplay(Display.NOTIFICATION)
                         .showAppUpdated(true)
@@ -140,5 +143,17 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        try {
+            AppUpdater.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
+        } catch (NullPointerException e) {
+            Log.d(this.getClass().getSimpleName(), e.getMessage());
+        }
+
+
     }
 }
