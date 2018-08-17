@@ -1,13 +1,16 @@
 package com.github.javiersantos.appupdater;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,7 +25,11 @@ import com.github.javiersantos.appupdater.objects.Update;
 
 import java.util.Map;
 
-public class AppUpdater implements IAppUpdater {
+public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissionsResultCallback {
+
+    @SuppressLint("StaticFieldLeak")
+    private static AppUpdater appUpdater = null;
+
     private Context context;
     private LibraryPreferences libraryPreferences;
     private Display display;
@@ -41,13 +48,14 @@ public class AppUpdater implements IAppUpdater {
     private Update installedUpdate;
     private Update update;
     private UnaviableUpdateListener unaviableUpdateListener;
+    public static int requestCodePermissionDirectDownload = 777;
 
     private AlertDialog alertDialog;
     private Snackbar snackbar;
     private Boolean isDialogCancelable;
     private Boolean isDirectDownload;
 
-    public AppUpdater(Context context) {
+    private AppUpdater(Context context) {
         this.context = context;
         this.libraryPreferences = new LibraryPreferences(context);
         this.display = Display.DIALOG;
@@ -495,4 +503,36 @@ public class AppUpdater implements IAppUpdater {
     public Update getUpdate() {
         return this.update;
     }
+
+    public static AppUpdater getInstance() {
+        if (appUpdater != null) {
+            return appUpdater;
+        } else {
+            throw new NullPointerException("No exist instance!");
+        }
+    }
+
+    public static AppUpdater getInstance(Context context) {
+        if (appUpdater == null) {
+            synchronized (AppUpdater.class) {
+                if (appUpdater == null) {
+                    appUpdater = new AppUpdater(context);
+                }
+            }
+        }
+        return appUpdater;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == requestCodePermissionDirectDownload) {
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+            }
+            UtilsLibrary.goToUpdate(context, updateFrom, update.getUrlToDownload(), true);
+        }
+    }
+
 }

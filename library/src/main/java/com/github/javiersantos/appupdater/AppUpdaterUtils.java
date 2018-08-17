@@ -168,6 +168,9 @@ public class AppUpdaterUtils {
         }
     }
 
+    /*
+     * Return the file name from Url
+     */
     public static String getFileNameFromUrl(URL url, @Nullable String extension) {
         try {
             String urlString = url.getFile();

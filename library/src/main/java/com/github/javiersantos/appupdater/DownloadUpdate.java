@@ -38,7 +38,7 @@ public class DownloadUpdate {
                 DownloadManager.Request request = new DownloadManager.Request(uri);
                 request.setMimeType(getMimeType(uri.toString()));
                 request.setTitle(fileName);
-                request.setDescription("Downloading attachment..");
+                request.setDescription(activity.getString(R.string.appupdater_downloading));
                 request.allowScanningByMediaScanner();
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
