@@ -39,11 +39,11 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
     private String xmlOrJsonUrl;
     private Integer showEvery;
     private Boolean showAppUpdated;
-    private String titleUpdate, descriptionUpdate, btnDismiss, btnUpdate, btnDisable; // Update available
+    private String titleUpdate, descriptionUpdate, btnUpdate, btnNegative, btnNeutral; // Update available
     private String titleNoUpdate, descriptionNoUpdate; // Update not available
     private int iconResId;
     private UtilsAsync.LatestAppVersion latestAppVersion;
-    private DialogInterface.OnClickListener btnUpdateClickListener, btnDismissClickListener, btnDisableClickListener;
+    private DialogInterface.OnClickListener btnUpdateClickListener, btnNegativeClickListener, btnNeutralClickListener;
     private Map<String, String> propertiesConnection;
     private Update installedUpdate;
     private Update update;
@@ -69,8 +69,8 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
         this.titleUpdate = context.getResources().getString(R.string.appupdater_update_available);
         this.titleNoUpdate = context.getResources().getString(R.string.appupdater_update_not_available);
         this.btnUpdate = context.getResources().getString(R.string.appupdater_btn_update);
-        this.btnDismiss = context.getResources().getString(R.string.appupdater_btn_dismiss);
-        this.btnDisable = context.getResources().getString(R.string.appupdater_btn_disable);
+        this.btnNegative = context.getResources().getString(R.string.appupdater_btn_dismiss);
+        this.btnNeutral = context.getResources().getString(R.string.appupdater_btn_disable);
         this.isDialogCancelable = true;
         this.isDirectDownload = false;
     }
@@ -263,52 +263,76 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
     @Override
     @Deprecated
     public AppUpdater setDialogButtonDismiss(@NonNull String text) {
-        setButtonDismiss(text);
+        setButtonNegative(text);
         return this;
     }
 
     @Override
     @Deprecated
     public AppUpdater setDialogButtonDismiss(@StringRes int textResource) {
-        setButtonDismiss(textResource);
+        setButtonNegative(textResource);
         return this;
     }
 
     @Override
-    public AppUpdater setButtonDismiss(@NonNull String text) {
-        this.btnDismiss = text;
+    public AppUpdater setDialogButtonNegative(@NonNull String text) {
+        setButtonNegative(text);
         return this;
     }
 
     @Override
-    public AppUpdater setButtonDismiss(@StringRes int textResource) {
-        this.btnDismiss = context.getString(textResource);
+    public AppUpdater setDialogButtonNegative(int textResource) {
+        setButtonNegative(textResource);
+        return this;
+    }
+
+    @Override
+    public AppUpdater setButtonNegative(@NonNull String text) {
+        this.btnNegative = text;
+        return this;
+    }
+
+    @Override
+    public AppUpdater setButtonNegative(@StringRes int textResource) {
+        this.btnNegative = context.getString(textResource);
         return this;
     }
 
     @Override
     @Deprecated
     public AppUpdater setDialogButtonDoNotShowAgain(@NonNull String text) {
-        setButtonDoNotShowAgain(text);
+        setButtonNeutral(text);
         return this;
     }
 
     @Override
     @Deprecated
     public AppUpdater setDialogButtonDoNotShowAgain(@StringRes int textResource) {
-        setButtonDoNotShowAgain(textResource);
+        setButtonNeutral(textResource);
         return this;
     }
 
     @Override
-    public AppUpdater setButtonDoNotShowAgain(@NonNull String text) {
-        this.btnDisable = text;
+    public AppUpdater setDialogButtonNeutral(@NonNull String text) {
+        setButtonNeutral(text);
         return this;
     }
 
     @Override
-    public AppUpdater setButtonDoNotShowAgain(@StringRes int textResource) {
-        this.btnDisable = context.getString(textResource);
+    public AppUpdater setDialogButtonNeutral(int textResource) {
+        setButtonNeutral(textResource);
+        return this;
+    }
+
+    @Override
+    public AppUpdater setButtonNeutral(@NonNull String text) {
+        this.btnNeutral = text;
+        return this;
+    }
+
+    @Override
+    public AppUpdater setButtonNeutral(@StringRes int textResource) {
+        this.btnNeutral = context.getString(textResource);
         return this;
     }
 
@@ -320,13 +344,25 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
 
     @Override
     public AppUpdater setButtonDismissClickListener(final DialogInterface.OnClickListener clickListener) {
-        btnDismissClickListener = clickListener;
+        btnNegativeClickListener = clickListener;
+        return this;
+    }
+
+    @Override
+    public AppUpdater setButtonNegativeClickListener(DialogInterface.OnClickListener clickListener) {
+        btnNegativeClickListener = clickListener;
         return this;
     }
 
     @Override
     public AppUpdater setButtonDoNotShowAgainClickListener(final DialogInterface.OnClickListener clickListener) {
-        btnDisableClickListener = clickListener;
+        btnNeutralClickListener = clickListener;
+        return this;
+    }
+
+    @Override
+    public AppUpdater setButtonNeutralClickListener(DialogInterface.OnClickListener clickListener) {
+        btnNeutralClickListener = clickListener;
         return this;
     }
 
@@ -380,9 +416,9 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
                         switch (display) {
                             case DIALOG:
                                 final DialogInterface.OnClickListener updateClickListener = btnUpdateClickListener == null ? new UpdateClickListener(context, updateFrom, update.getUrlToDownload(), isDirectDownload) : btnUpdateClickListener;
-                                final DialogInterface.OnClickListener disableClickListener = btnDisableClickListener == null ? new DisableClickListener(context) : btnDisableClickListener;
+                                final DialogInterface.OnClickListener disableClickListener = btnNeutralClickListener == null ? new DisableClickListener(context) : btnNeutralClickListener;
 
-                                alertDialog = UtilsDisplay.showUpdateAvailableDialog(context, titleUpdate, getDescriptionUpdate(context, update, Display.DIALOG), btnDismiss, btnUpdate, btnDisable, updateClickListener, btnDismissClickListener, disableClickListener);
+                                alertDialog = UtilsDisplay.showUpdateAvailableDialog(context, titleUpdate, getDescriptionUpdate(context, update, Display.DIALOG), btnUpdate, btnNegative, btnNeutral, updateClickListener, btnNegativeClickListener, disableClickListener);
                                 alertDialog.setCancelable(isDialogCancelable);
                                 alertDialog.show();
                                 break;

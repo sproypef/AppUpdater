@@ -5,8 +5,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.DisableClickListener;
@@ -274,7 +272,7 @@ public interface IAppUpdater {
      *
      * @param text for the dismiss button
      * @return this
-     * @deprecated use {@link #setButtonDismiss(String)} instead
+     * @deprecated use {@link #setButtonNegative(String)} instead
      */
     AppUpdater setDialogButtonDismiss(@NonNull String text);
 
@@ -283,9 +281,28 @@ public interface IAppUpdater {
      *
      * @param textResource resource from the strings xml file for the dismiss button
      * @return this
-     * @deprecated use {@link #setButtonDismiss(int)} instead
+     * @deprecated use {@link #setButtonNegative(int)} instead
      */
     AppUpdater setDialogButtonDismiss(@StringRes int textResource);
+
+    /**
+     * Set a custom "Negative" button text when a new update is available.
+     *
+     * @param text for the dismiss button
+     * @return this
+     * @deprecated use {@link #setButtonNegative(String)} instead
+     */
+    AppUpdater setDialogButtonNegative(@NonNull String text);
+
+    /**
+     * Set a custom "Negative" button text when a new update is available.
+     *
+     * @param textResource resource from the strings xml file for the dismiss button
+     * @return this
+     * @deprecated use {@link #setButtonNegative(int)} instead
+     */
+    AppUpdater setDialogButtonNegative(@StringRes int textResource);
+
 
     /**
      * Set a custom "Dismiss" button text when a new update is available.
@@ -293,7 +310,7 @@ public interface IAppUpdater {
      * @param text for the dismiss button
      * @return this
      */
-    AppUpdater setButtonDismiss(@NonNull String text);
+    AppUpdater setButtonNegative(@NonNull String text);
 
     /**
      * Set a custom "Dismiss" button text when a new update is available.
@@ -301,14 +318,14 @@ public interface IAppUpdater {
      * @param textResource resource from the strings xml file for the dismiss button
      * @return this
      */
-    AppUpdater setButtonDismiss(@StringRes int textResource);
+    AppUpdater setButtonNegative(@StringRes int textResource);
 
     /**
      * Set a custom "Don't show again" button text when a new update is available.
      *
      * @param text for the disable button
      * @return this
-     * @deprecated use {@link #setButtonDoNotShowAgain(String)} instead
+     * @deprecated use {@link #setButtonNeutral(String)} instead
      */
     AppUpdater setDialogButtonDoNotShowAgain(@NonNull String text);
 
@@ -317,9 +334,28 @@ public interface IAppUpdater {
      *
      * @param textResource resource from the strings xml file for the disable button
      * @return this
-     * @deprecated use {@link #setButtonDoNotShowAgain(int)} instead
+     * @deprecated use {@link #setButtonNeutral(int)} instead
      */
     AppUpdater setDialogButtonDoNotShowAgain(@StringRes int textResource);
+
+    /**
+     * Set a custom "Neutral" button text when a new update is available.
+     *
+     * @param text for the disable button
+     * @return this
+     * @deprecated use {@link #setButtonNeutral(String)} instead
+     */
+    AppUpdater setDialogButtonNeutral(@NonNull String text);
+
+    /**
+     * Set a custom "Neutral" button text when a new update is available.
+     *
+     * @param textResource resource from the strings xml file for the disable button
+     * @return this
+     * @deprecated use {@link #setButtonNeutral(int)} instead
+     */
+    AppUpdater setDialogButtonNeutral(@StringRes int textResource);
+
 
     /**
      * Set a custom "Don't show again" button text when a new update is available.
@@ -327,7 +363,7 @@ public interface IAppUpdater {
      * @param text for the disable button
      * @return this
      */
-    AppUpdater setButtonDoNotShowAgain(@NonNull String text);
+    AppUpdater setButtonNeutral(@NonNull String text);
 
     /**
      * Set a custom "Don't show again" button text when a new update is available.
@@ -335,7 +371,7 @@ public interface IAppUpdater {
      * @param textResource resource from the strings xml file for the disable button
      * @return this
      */
-    AppUpdater setButtonDoNotShowAgain(@StringRes int textResource);
+    AppUpdater setButtonNeutral(@StringRes int textResource);
 
     /**
      * Sets a custom click listener for the "Update" button when a new update is available.
@@ -355,6 +391,14 @@ public interface IAppUpdater {
     AppUpdater setButtonDismissClickListener(DialogInterface.OnClickListener clickListener);
 
     /**
+     * Sets a custom click listener for the "Negative" button when a new update is available.
+     *
+     * @param clickListener for dismiss button
+     * @return this
+     */
+    AppUpdater setButtonNegativeClickListener(DialogInterface.OnClickListener clickListener);
+
+    /**
      * Sets a custom click listener for the "Don't show again" button when a new update is available. <br/>
      * In order to maintain the default functionality, extend {@link DisableClickListener}
      *
@@ -362,6 +406,15 @@ public interface IAppUpdater {
      * @return this
      */
     AppUpdater setButtonDoNotShowAgainClickListener(DialogInterface.OnClickListener clickListener);
+
+    /**
+     * Sets a custom click listener for the "Neutral" button when a new update is available. <br/>
+     * In order to maintain the default functionality, extend {@link DisableClickListener}
+     *
+     * @param clickListener for disable button
+     * @return this
+     */
+    AppUpdater setButtonNeutralClickListener(DialogInterface.OnClickListener clickListener);
 
     /**
      * Set listener for execute when not update aviable.

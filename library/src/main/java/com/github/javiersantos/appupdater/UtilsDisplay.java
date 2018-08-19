@@ -18,13 +18,13 @@ import java.net.URL;
 
 class UtilsDisplay {
 
-    static AlertDialog showUpdateAvailableDialog(final Context context, String title, String content, String btnNegative, String btnPositive, String btnNeutral, final DialogInterface.OnClickListener updateClickListener, final DialogInterface.OnClickListener dismissClickListener, final DialogInterface.OnClickListener disableClickListener) {
+    static AlertDialog showUpdateAvailableDialog(final Context context, String title, String content, String btnPositive, String btnNegative, String btnNeutral, final DialogInterface.OnClickListener positiveClickListener, final DialogInterface.OnClickListener negativeClickListener, final DialogInterface.OnClickListener neutralClickListener) {
         return new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(content)
-                .setPositiveButton(btnPositive, updateClickListener)
-                .setNegativeButton(btnNegative, dismissClickListener)
-                .setNeutralButton(btnNeutral, disableClickListener).create();
+                .setPositiveButton(btnPositive, positiveClickListener)
+                .setNegativeButton(btnNegative, negativeClickListener)
+                .setNeutralButton(btnNeutral, neutralClickListener).create();
     }
 
     static AlertDialog showUpdateNotAvailableDialog(final Context context, String title, String content) {
@@ -33,7 +33,8 @@ class UtilsDisplay {
                 .setMessage(content)
                 .setPositiveButton(context.getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {}
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
                 })
                 .create();
     }
