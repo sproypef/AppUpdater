@@ -3,7 +3,6 @@ package com.github.javiersantos.appupdater;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -20,6 +19,7 @@ import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.Duration;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.interfaces.IAppUpdater;
+import com.github.javiersantos.appupdater.interfaces.IAppUpdaterOnClickListener;
 import com.github.javiersantos.appupdater.objects.GitHub;
 import com.github.javiersantos.appupdater.objects.Update;
 
@@ -43,7 +43,7 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
     private String titleNoUpdate, descriptionNoUpdate; // Update not available
     private int iconResId;
     private UtilsAsync.LatestAppVersion latestAppVersion;
-    private DialogInterface.OnClickListener btnUpdateClickListener, btnNegativeClickListener, btnNeutralClickListener;
+    private IAppUpdaterOnClickListener btnUpdateClickListener, btnNegativeClickListener, btnNeutralClickListener;
     private Map<String, String> propertiesConnection;
     private Update installedUpdate;
     private Update update;
@@ -337,31 +337,19 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
     }
 
     @Override
-    public AppUpdater setButtonUpdateClickListener(final DialogInterface.OnClickListener clickListener) {
+    public AppUpdater setButtonUpdateClickListener(final IAppUpdaterOnClickListener clickListener) {
         btnUpdateClickListener = clickListener;
         return this;
     }
 
     @Override
-    public AppUpdater setButtonDismissClickListener(final DialogInterface.OnClickListener clickListener) {
+    public AppUpdater setButtonNegativeClickListener(IAppUpdaterOnClickListener clickListener) {
         btnNegativeClickListener = clickListener;
         return this;
     }
 
     @Override
-    public AppUpdater setButtonNegativeClickListener(DialogInterface.OnClickListener clickListener) {
-        btnNegativeClickListener = clickListener;
-        return this;
-    }
-
-    @Override
-    public AppUpdater setButtonDoNotShowAgainClickListener(final DialogInterface.OnClickListener clickListener) {
-        btnNeutralClickListener = clickListener;
-        return this;
-    }
-
-    @Override
-    public AppUpdater setButtonNeutralClickListener(DialogInterface.OnClickListener clickListener) {
+    public AppUpdater setButtonNeutralClickListener(IAppUpdaterOnClickListener clickListener) {
         btnNeutralClickListener = clickListener;
         return this;
     }
@@ -415,10 +403,11 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
                     if (UtilsLibrary.isAbleToShow(successfulChecks, showEvery)) {
                         switch (display) {
                             case DIALOG:
-                                final DialogInterface.OnClickListener updateClickListener = btnUpdateClickListener == null ? new UpdateClickListener(context, updateFrom, update.getUrlToDownload(), isDirectDownload) : btnUpdateClickListener;
-                                final DialogInterface.OnClickListener disableClickListener = btnNeutralClickListener == null ? new DisableClickListener(context) : btnNeutralClickListener;
+                                final IAppUpdaterOnClickListener updateClickListener = btnUpdateClickListener == null ? new UpdateClickListener(context, updateFrom, update.getUrlToDownload(), isDirectDownload) : btnUpdateClickListener;
+                                final IAppUpdaterOnClickListener neutralClickListener = (btnNeutralClickListener == null ? new NeutralClickListener(context) : btnNeutralClickListener);
+                                final IAppUpdaterOnClickListener negativeClickListener = (btnNegativeClickListener == null ? new NegativeClickListener(context) : btnNegativeClickListener);
 
-                                alertDialog = UtilsDisplay.showUpdateAvailableDialog(context, titleUpdate, getDescriptionUpdate(context, update, Display.DIALOG), btnUpdate, btnNegative, btnNeutral, updateClickListener, btnNegativeClickListener, disableClickListener);
+                                alertDialog = UtilsDisplay.showUpdateAvailableDialog(context, titleUpdate, getDescriptionUpdate(context, update, Display.DIALOG), btnUpdate, btnNegative, btnNeutral, updateClickListener, negativeClickListener, neutralClickListener);
                                 alertDialog.setCancelable(isDialogCancelable);
                                 alertDialog.show();
                                 break;

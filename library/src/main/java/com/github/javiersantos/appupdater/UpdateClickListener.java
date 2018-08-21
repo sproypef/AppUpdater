@@ -2,8 +2,10 @@ package com.github.javiersantos.appupdater;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.view.View;
 
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
+import com.github.javiersantos.appupdater.interfaces.IAppUpdaterOnClickListener;
 
 import java.net.URL;
 
@@ -11,7 +13,7 @@ import java.net.URL;
  * Click listener for the "Update" button of the update dialog. <br/>
  * Extend this class to add custom actions to the button on top of the default functionality.
  */
-public class UpdateClickListener implements DialogInterface.OnClickListener {
+public class UpdateClickListener implements IAppUpdaterOnClickListener {
 
     private final Context context;
     private final UpdateFrom updateFrom;
@@ -35,6 +37,11 @@ public class UpdateClickListener implements DialogInterface.OnClickListener {
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
+        UtilsLibrary.goToUpdate(context, updateFrom, apk, isDirectDownload);
+    }
+
+    @Override
+    public void onClick(View v) {
         UtilsLibrary.goToUpdate(context, updateFrom, apk, isDirectDownload);
     }
 }

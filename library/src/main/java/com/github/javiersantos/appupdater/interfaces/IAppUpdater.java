@@ -1,13 +1,12 @@
 package com.github.javiersantos.appupdater.interfaces;
 
-import android.content.DialogInterface;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.DisableClickListener;
+import com.github.javiersantos.appupdater.NeutralClickListener;
 import com.github.javiersantos.appupdater.UpdateClickListener;
 import com.github.javiersantos.appupdater.enums.AppUpdaterError;
 import com.github.javiersantos.appupdater.enums.Display;
@@ -380,15 +379,7 @@ public interface IAppUpdater {
      * @param clickListener for update button
      * @return this
      */
-    AppUpdater setButtonUpdateClickListener(DialogInterface.OnClickListener clickListener);
-
-    /**
-     * Sets a custom click listener for the "Dismiss" button when a new update is available.
-     *
-     * @param clickListener for dismiss button
-     * @return this
-     */
-    AppUpdater setButtonDismissClickListener(DialogInterface.OnClickListener clickListener);
+    AppUpdater setButtonUpdateClickListener(IAppUpdaterOnClickListener clickListener);
 
     /**
      * Sets a custom click listener for the "Negative" button when a new update is available.
@@ -396,25 +387,16 @@ public interface IAppUpdater {
      * @param clickListener for dismiss button
      * @return this
      */
-    AppUpdater setButtonNegativeClickListener(DialogInterface.OnClickListener clickListener);
-
-    /**
-     * Sets a custom click listener for the "Don't show again" button when a new update is available. <br/>
-     * In order to maintain the default functionality, extend {@link DisableClickListener}
-     *
-     * @param clickListener for disable button
-     * @return this
-     */
-    AppUpdater setButtonDoNotShowAgainClickListener(DialogInterface.OnClickListener clickListener);
+    AppUpdater setButtonNegativeClickListener(IAppUpdaterOnClickListener clickListener);
 
     /**
      * Sets a custom click listener for the "Neutral" button when a new update is available. <br/>
-     * In order to maintain the default functionality, extend {@link DisableClickListener}
+     * In order to maintain the default functionality, extend {@link NeutralClickListener}
      *
      * @param clickListener for disable button
      * @return this
      */
-    AppUpdater setButtonNeutralClickListener(DialogInterface.OnClickListener clickListener);
+    AppUpdater setButtonNeutralClickListener(IAppUpdaterOnClickListener clickListener);
 
     /**
      * Set listener for execute when not update aviable.

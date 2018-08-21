@@ -13,11 +13,13 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
+import com.github.javiersantos.appupdater.interfaces.IAppUpdaterOnClickListener;
 
 import java.net.URL;
 
 class UtilsDisplay {
 
+    @Deprecated
     static AlertDialog showUpdateAvailableDialog(final Context context, String title, String content, String btnPositive, String btnNegative, String btnNeutral, final DialogInterface.OnClickListener positiveClickListener, final DialogInterface.OnClickListener negativeClickListener, final DialogInterface.OnClickListener neutralClickListener) {
         return new AlertDialog.Builder(context)
                 .setTitle(title)
@@ -25,6 +27,41 @@ class UtilsDisplay {
                 .setPositiveButton(btnPositive, positiveClickListener)
                 .setNegativeButton(btnNegative, negativeClickListener)
                 .setNeutralButton(btnNeutral, neutralClickListener).create();
+    }
+
+    static AlertDialog showUpdateAvailableDialog(final Context context, String title, String content, String btnPositive, String btnNegative, String btnNeutral, final IAppUpdaterOnClickListener positiveClickListener, final IAppUpdaterOnClickListener negativeClickListener, final IAppUpdaterOnClickListener neutralClickListener) {
+        final AlertDialog alertDialog = new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(content)
+                .setPositiveButton(btnPositive, null)
+                .setNegativeButton(btnNegative, null)
+                .setNeutralButton(btnNeutral, null).create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        positiveClickListener.onClick(v);
+                    }
+                });
+                alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        negativeClickListener.onClick(v);
+                    }
+                });
+                alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        neutralClickListener.onClick(v);
+                    }
+                });
+            }
+        });
+
+        return alertDialog;
     }
 
     static AlertDialog showUpdateNotAvailableDialog(final Context context, String title, String content) {
