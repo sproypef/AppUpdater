@@ -25,6 +25,6 @@ public class NeutralClickListener implements IAppUpdaterOnClickListener {
 
     @Override
     public void onClick(View v) {
-        
+
     }
 }

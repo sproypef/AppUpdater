@@ -30,7 +30,7 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
     @SuppressLint("StaticFieldLeak")
     private static AppUpdater appUpdater = null;
 
-    private Context context;
+    Context context;
     private LibraryPreferences libraryPreferences;
     private Display display;
     private UpdateFrom updateFrom;
@@ -52,6 +52,7 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
     private Boolean dismissWithButtonUpdated = false;
     private Boolean dismissWithButtonNegative = false;
     private Boolean dismissWithButtonNeutral = false;
+    Boolean appRequireUpdate = false;
 
     private AlertDialog alertDialog;
     private Snackbar snackbar;

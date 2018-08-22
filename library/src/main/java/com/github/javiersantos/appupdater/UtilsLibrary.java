@@ -365,4 +365,23 @@ class UtilsLibrary {
         return res;
     }
 
+    static String getAppVersionName(Context context) {
+        String version = "VName";
+        try {
+            version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            return version;
+        }
+        return version;
+    }
+
+    static String getAppVersionCode(Context context) {
+        String version = "VCode";
+        try {
+            version = String.valueOf(context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode);
+        } catch (PackageManager.NameNotFoundException e) {
+            return version;
+        }
+        return version;
+    }
 }

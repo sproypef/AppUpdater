@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.interfaces.IAppUpdaterOnClickListener;
@@ -44,24 +45,36 @@ class UtilsDisplay {
                     @Override
                     public void onClick(View v) {
                         positiveClickListener.onClick(v);
-                        if (AppUpdater.getInstance().getDismissWithButtonUpdated())
+
+                        if (AppUpdater.getInstance().getDismissWithButtonUpdated() && !AppUpdater.getInstance().appRequireUpdate)
                             alertDialog.dismiss();
+
+                        if (AppUpdater.getInstance().appRequireUpdate)
+                            Toast.makeText(AppUpdater.getInstance().context, "App update required", Toast.LENGTH_SHORT).show();
                     }
                 });
                 alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         negativeClickListener.onClick(v);
-                        if (AppUpdater.getInstance().getDismissWithButtonNegative())
+
+                        if (AppUpdater.getInstance().getDismissWithButtonNegative() && !AppUpdater.getInstance().appRequireUpdate)
                             alertDialog.dismiss();
+
+                        if (AppUpdater.getInstance().appRequireUpdate)
+                            Toast.makeText(AppUpdater.getInstance().context, "App update required", Toast.LENGTH_SHORT).show();
                     }
                 });
                 alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         neutralClickListener.onClick(v);
-                        if (AppUpdater.getInstance().getDismissWithButtonNeutral())
+
+                        if (AppUpdater.getInstance().getDismissWithButtonNeutral() && !AppUpdater.getInstance().appRequireUpdate)
                             alertDialog.dismiss();
+
+                        if (AppUpdater.getInstance().appRequireUpdate)
+                            Toast.makeText(AppUpdater.getInstance().context, "App update required", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
