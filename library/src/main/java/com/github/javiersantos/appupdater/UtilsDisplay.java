@@ -44,18 +44,24 @@ class UtilsDisplay {
                     @Override
                     public void onClick(View v) {
                         positiveClickListener.onClick(v);
+                        if (AppUpdater.getInstance().getDismissWithButtonUpdated())
+                            alertDialog.dismiss();
                     }
                 });
                 alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         negativeClickListener.onClick(v);
+                        if (AppUpdater.getInstance().getDismissWithButtonNegative())
+                            alertDialog.dismiss();
                     }
                 });
                 alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         neutralClickListener.onClick(v);
+                        if (AppUpdater.getInstance().getDismissWithButtonNeutral())
+                            alertDialog.dismiss();
                     }
                 });
             }

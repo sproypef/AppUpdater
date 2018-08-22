@@ -20,11 +20,11 @@ public class NeutralClickListener implements IAppUpdaterOnClickListener {
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
-        libraryPreferences.setAppUpdaterShow(false);
+
     }
 
     @Override
     public void onClick(View v) {
-        libraryPreferences.setAppUpdaterShow(false);
+        
     }
 }

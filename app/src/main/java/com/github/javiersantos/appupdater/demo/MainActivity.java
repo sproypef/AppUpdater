@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
                         //.setUpdateFrom(UpdateFrom.GITHUB)
                         //.setGitHubUserAndRepo("javiersantos", "AppUpdater")
                         .setDirectDownload(true)
+                        .setDissmissWithButton(false, false, true)
                         .setUpdateFrom(UpdateFrom.JSON)
                         .setUpdateJSON("https://sproypef.com/_emulador/servicioVersion.php")
                         .setDisplay(Display.DIALOG)

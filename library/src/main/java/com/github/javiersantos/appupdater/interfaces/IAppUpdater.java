@@ -432,6 +432,16 @@ public interface IAppUpdater {
     AppUpdater setDirectDownload(Boolean isDirecDownload);
 
     /**
+     * Dismiss dialog with seleccted buttons
+     *
+     * @param withBtnUpdate
+     * @param withBtnNegative
+     * @param withBtnNeutral
+     * @return
+     */
+    AppUpdater setDissmissWithButton(Boolean withBtnUpdate, Boolean withBtnNegative, Boolean withBtnNeutral);
+
+    /**
      * Execute AppUpdater in background.
      *
      * @return this

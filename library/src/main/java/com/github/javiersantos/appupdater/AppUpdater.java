@@ -49,6 +49,9 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
     private Update update;
     private UnaviableUpdateListener unaviableUpdateListener;
     public static int requestCodePermissionDirectDownload = 777;
+    private Boolean dismissWithButtonUpdated = false;
+    private Boolean dismissWithButtonNegative = false;
+    private Boolean dismissWithButtonNeutral = false;
 
     private AlertDialog alertDialog;
     private Snackbar snackbar;
@@ -69,8 +72,8 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
         this.titleUpdate = context.getResources().getString(R.string.appupdater_update_available);
         this.titleNoUpdate = context.getResources().getString(R.string.appupdater_update_not_available);
         this.btnUpdate = context.getResources().getString(R.string.appupdater_btn_update);
-        this.btnNegative = context.getResources().getString(R.string.appupdater_btn_dismiss);
-        this.btnNeutral = context.getResources().getString(R.string.appupdater_btn_disable);
+        this.btnNegative = context.getResources().getString(R.string.appupdater_btn_disable);
+        this.btnNeutral = context.getResources().getString(R.string.appupdater_btn_dismiss);
         this.isDialogCancelable = true;
         this.isDirectDownload = false;
     }
@@ -379,6 +382,14 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
     }
 
     @Override
+    public AppUpdater setDissmissWithButton(Boolean withBtnUpdate, Boolean withBtnNegative, Boolean withBtnNeutral) {
+        this.dismissWithButtonUpdated = withBtnUpdate;
+        this.dismissWithButtonNegative = withBtnNegative;
+        this.dismissWithButtonNeutral = withBtnNeutral;
+        return this;
+    }
+
+    @Override
     public AppUpdater init() {
         start();
         return this;
@@ -560,4 +571,15 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
         }
     }
 
+    public Boolean getDismissWithButtonUpdated() {
+        return dismissWithButtonUpdated;
+    }
+
+    public Boolean getDismissWithButtonNegative() {
+        return dismissWithButtonNegative;
+    }
+
+    public Boolean getDismissWithButtonNeutral() {
+        return dismissWithButtonNeutral;
+    }
 }
