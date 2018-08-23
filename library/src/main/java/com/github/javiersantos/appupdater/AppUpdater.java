@@ -52,7 +52,7 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
     private Boolean dismissWithButtonUpdated = false;
     private Boolean dismissWithButtonNegative = false;
     private Boolean dismissWithButtonNeutral = false;
-    Boolean appRequireUpdate = false;
+    private Boolean appRequireUpdate = false;
 
     private AlertDialog alertDialog;
     private Snackbar snackbar;
@@ -582,5 +582,19 @@ public class AppUpdater implements IAppUpdater, ActivityCompat.OnRequestPermissi
 
     public Boolean getDismissWithButtonNeutral() {
         return dismissWithButtonNeutral;
+    }
+
+    /**
+     * Your server decide if this version app require update.
+     * Call after .create() or .show()
+     *
+     * @return true if this app require update
+     */
+    public Boolean isAppRequireUpdate() {
+        return appRequireUpdate;
+    }
+
+    public void setAppRequireUpdate(Boolean appRequireUpdate) {
+        this.appRequireUpdate = appRequireUpdate;
     }
 }

@@ -46,10 +46,10 @@ class UtilsDisplay {
                     public void onClick(View v) {
                         positiveClickListener.onClick(v);
 
-                        if (AppUpdater.getInstance().getDismissWithButtonUpdated() && !AppUpdater.getInstance().appRequireUpdate)
+                        if (AppUpdater.getInstance().getDismissWithButtonUpdated())
                             alertDialog.dismiss();
 
-                        if (AppUpdater.getInstance().appRequireUpdate)
+                        if (AppUpdater.getInstance().isAppRequireUpdate())
                             Toast.makeText(AppUpdater.getInstance().context, "App update required", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -58,10 +58,10 @@ class UtilsDisplay {
                     public void onClick(View v) {
                         negativeClickListener.onClick(v);
 
-                        if (AppUpdater.getInstance().getDismissWithButtonNegative() && !AppUpdater.getInstance().appRequireUpdate)
+                        if (AppUpdater.getInstance().getDismissWithButtonNegative())
                             alertDialog.dismiss();
 
-                        if (AppUpdater.getInstance().appRequireUpdate)
+                        if (AppUpdater.getInstance().isAppRequireUpdate())
                             Toast.makeText(AppUpdater.getInstance().context, "App update required", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -70,10 +70,10 @@ class UtilsDisplay {
                     public void onClick(View v) {
                         neutralClickListener.onClick(v);
 
-                        if (AppUpdater.getInstance().getDismissWithButtonNeutral() && !AppUpdater.getInstance().appRequireUpdate)
+                        if (AppUpdater.getInstance().getDismissWithButtonNeutral())
                             alertDialog.dismiss();
 
-                        if (AppUpdater.getInstance().appRequireUpdate)
+                        if (AppUpdater.getInstance().isAppRequireUpdate())
                             Toast.makeText(AppUpdater.getInstance().context, "App update required", Toast.LENGTH_SHORT).show();
                     }
                 });

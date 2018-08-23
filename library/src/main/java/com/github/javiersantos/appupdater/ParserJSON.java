@@ -64,11 +64,11 @@ class ParserJSON {
                 }
                 case 1: {
                     if (applyTo.getString(0).equals("*")) {
-                        AppUpdater.getInstance().appRequireUpdate = true;
+                        AppUpdater.getInstance().setAppRequireUpdate(true);
                     } else {
                         String applyVersion = applyTo.getString(0);//.replaceAll("\\.", "");
                         if (applyVersion.equals(appVersionName) || applyVersion.equals(appVersionCode)) {
-                            AppUpdater.getInstance().appRequireUpdate = true;
+                            AppUpdater.getInstance().setAppRequireUpdate(true);
                         }
                     }
                     break;
@@ -77,7 +77,7 @@ class ParserJSON {
                     for (int i = 0; i < applyTo.length(); i++) {
                         String applyVersion = applyTo.getString(i);//.replaceAll("\\.", "");
                         if (applyVersion.equals(appVersionName) || applyVersion.equals(appVersionCode)) {
-                            AppUpdater.getInstance().appRequireUpdate = true;
+                            AppUpdater.getInstance().setAppRequireUpdate(true);
                             break;
                         }
                     }
